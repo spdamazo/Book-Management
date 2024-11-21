@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { getBooks, deleteBook } from "../api"; // Assuming these functions are in your API file
+import { useNavigate } from "react-router-dom"; // Import useNavigate for programmatic navigation
 
 const BookList = ({ token }) => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   // Fetch books on component mount
   useEffect(() => {
@@ -41,6 +43,11 @@ const BookList = ({ token }) => {
     }
   };
 
+  const handleEdit = (bookId) => {
+    // Navigate to the BookForm page with the bookId for editing
+    navigate(`/edit/${bookId}`);
+  };
+
   if (loading) {
     return <p>Loading books...</p>;
   }
@@ -64,7 +71,7 @@ const BookList = ({ token }) => {
               {token && (
                 <div>
                   <button onClick={() => handleDelete(book.id)}>Delete</button>
-                  <button>Edit</button> {/* Placeholder for edit functionality */}
+                  <button onClick={() => handleEdit(book.id)}>Edit</button> {/* Programmatic navigation */}
                 </div>
               )}
             </li>

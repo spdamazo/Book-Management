@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import Login from "./Component/Login"; // Import the new Login component
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom"; // Import necessary router components
+import Login from "./Component/Login"; // Import the Login component
 import BookList from "./Component/BookList"; // Component to display the list of books
 import AdminView from "./Component/AdminView"; // Admin-specific components for adding/editing/deleting books
+import BookForm from "./Component/BookForm"; // Import the BookForm for adding/editing books
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -35,26 +37,73 @@ const App = () => {
   };
 
   return (
-    <div>
-      <h1>Book Management System</h1>
+    <Router>
+      <div>
+        <h1>Book Management System</h1>
 
-      {!isLoggedIn ? (
-        <Login onLoginSuccess={handleLoginSuccess} /> // Use Login component
-      ) : (
-        <div>
-          {isAdmin ? (
-            <div>
-              <AdminView token={token} /> {/* Admin view - Can add/edit/delete books */}
-              <button onClick={handleLogout}>Logout</button>
-            </div>
-          ) : (
-            <BookList token={token} /> // Guest view - Can only view the books
+        {/* Navigation links */}
+        <nav>
+          <Link to="/books" style={{ margin: "0 10px" }}>Book List</Link>
+          {isAdmin && (
+            <Link to="/add-book" style={{ margin: "0 10px" }}>Add Book</Link>
           )}
-        </div>
-      )}
+          {isLoggedIn ? (
+            <>
+              <button onClick={handleLogout} style={{ margin: "0 10px" }}>
+                Logout
+              </button>
+            </>
+          ) : (
+            <Link to="/login" style={{ margin: "0 10px" }}>
+              Admin Login
+            </Link>
+          )}
+        </nav>
 
-      {!isLoggedIn && <BookList token={token} />} {/* Guest view always visible, no login required */}
-    </div>
+        <Routes>
+          {/* Route for the login page */}
+          <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
+
+          {/* Route for the book list page */}
+          <Route
+            path="/books"
+            element={<BookList token={token} />}
+          />
+
+          {/* Admin route for adding/editing books */}
+          <Route
+            path="/admin"
+            element={
+              isAdmin ? (
+                <div>
+                  <AdminView token={token} />
+                </div>
+              ) : (
+                <div>You do not have admin access</div>
+              )
+            }
+          />
+
+          {/* Route for adding a new book */}
+          <Route
+            path="/add-book"
+            element={<BookForm token={token} onSuccess={() => {}} />} // Add a book form for admin
+          />
+
+          {/* Route for editing a book */}
+          <Route
+            path="/edit/:bookId"
+            element={<BookForm token={token} />}
+          />
+
+          {/* Default route, redirect to /books */}
+          <Route
+            path="/"
+            element={<BookList token={token} />}
+          />
+        </Routes>
+      </div>
+    </Router>
   );
 };
 

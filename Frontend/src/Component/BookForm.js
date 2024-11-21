@@ -1,8 +1,10 @@
-import React, { useState } from "react";
-import { addBook, updateBook } from "../api";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom"; // Import useParams and useNavigate
+import { addBook, updateBook, getBookById } from "../api";
 
-const BookForm = ({ token, bookId, onSuccess }) => {
-  // State variables for form inputs
+const BookForm = ({ token, onSuccess }) => {
+  const { bookId } = useParams(); // Get bookId from the URL parameters
+  const navigate = useNavigate(); // Use the navigate hook
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [description, setDescription] = useState("");
@@ -10,11 +12,29 @@ const BookForm = ({ token, bookId, onSuccess }) => {
   const [coverImage, setCoverImage] = useState("");
   const [error, setError] = useState(null);
 
-  // Form submission handler
+  // Fetch book data if editing an existing book
+  useEffect(() => {
+    if (bookId) {
+      const fetchBookData = async () => {
+        try {
+          const data = await getBookById(bookId, token); // Fetch book by ID
+          setTitle(data.title);
+          setAuthor(data.author);
+          setDescription(data.description);
+          setPublicationDate(data.publicationDate);
+          setCoverImage(data.coverImage);
+        } catch (err) {
+          console.error("Error fetching book data:", err);
+          setError("Failed to load book data.");
+        }
+      };
+      fetchBookData();
+    }
+  }, [bookId, token]); // Fetch data when bookId changes
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Ensure the token is passed to the API call
     if (!token) {
       setError("You must be logged in to add or update a book.");
       return;
@@ -32,9 +52,10 @@ const BookForm = ({ token, bookId, onSuccess }) => {
         await addBook(bookData, token);
         alert("Book added successfully!");
       }
-      // Optionally trigger onSuccess callback to refresh the UI or fetch the updated list
+      
+      // Navigate to the book list page after success
       if (onSuccess) onSuccess();
-      window.location.reload(); // Refresh the page after adding or updating
+      navigate("/books"); // Redirect to BookList after adding/updating book
     } catch (err) {
       console.error("Error adding/updating book:", err);
       setError("An error occurred while saving the book. Please try again.");
