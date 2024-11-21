@@ -411,7 +411,7 @@
     "id": 52,
     "title": "Book2",
     "author": "Person2",
-    "description": "Description2",
+    "description": "Desc",
     "publicationDate": "2024-11-20",
     "coverImage": "https://www.designforwriters.com/wp-content/uploads/2017/10/design-for-writers-book-cover-tf-2-a-million-to-one.jpg"
   },
@@ -419,8 +419,48 @@
     "id": 53,
     "title": "Book3",
     "author": "Person3",
-    "description": "Description3",
+    "description": "Desc",
+    "publicationDate": "2024-11-19",
+    "coverImage": "https://www.designforwriters.com/wp-content/uploads/2017/10/design-for-writers-book-cover-tf-2-a-million-to-one.jpg"
+  },
+  {
+    "id": 54,
+    "title": "Book4",
+    "author": "Person4",
+    "description": "Desc",
     "publicationDate": "2024-11-20",
+    "coverImage": "https://www.designforwriters.com/wp-content/uploads/2017/10/design-for-writers-book-cover-tf-2-a-million-to-one.jpg"
+  },
+  {
+    "id": 55,
+    "title": "Book5",
+    "author": "Person5",
+    "description": "Desc",
+    "publicationDate": "2024-11-20",
+    "coverImage": "https://www.designforwriters.com/wp-content/uploads/2017/10/design-for-writers-book-cover-tf-2-a-million-to-one.jpg"
+  },
+  {
+    "id": 56,
+    "title": "Book6",
+    "author": "Person 6",
+    "description": "Desc",
+    "publicationDate": "2024-11-20",
+    "coverImage": "https://www.designforwriters.com/wp-content/uploads/2017/10/design-for-writers-book-cover-tf-2-a-million-to-one.jpg"
+  },
+  {
+    "id": 57,
+    "title": "Book7",
+    "author": "Person7",
+    "description": "Desc",
+    "publicationDate": "2024-11-20",
+    "coverImage": "https://www.designforwriters.com/wp-content/uploads/2017/10/design-for-writers-book-cover-tf-2-a-million-to-one.jpg"
+  },
+  {
+    "id": 58,
+    "title": "Book8",
+    "author": "Person8",
+    "description": "Desc",
+    "publicationDate": "2024-11-19",
     "coverImage": "https://www.designforwriters.com/wp-content/uploads/2017/10/design-for-writers-book-cover-tf-2-a-million-to-one.jpg"
   }
 ]

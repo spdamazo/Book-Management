@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { addBook, updateBook } from "../api";
 
-const BookForm = ({ token, bookId }) => {
+const BookForm = ({ token, bookId, onSuccess }) => {
   // State variables for form inputs
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
@@ -13,6 +13,13 @@ const BookForm = ({ token, bookId }) => {
   // Form submission handler
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Ensure the token is passed to the API call
+    if (!token) {
+      setError("You must be logged in to add or update a book.");
+      return;
+    }
+
     const bookData = { title, author, description, publicationDate, coverImage };
 
     try {
@@ -24,8 +31,10 @@ const BookForm = ({ token, bookId }) => {
         // Add a new book if no bookId is provided
         await addBook(bookData, token);
         alert("Book added successfully!");
-        window.location.reload(); // Refresh the page after adding
       }
+      // Optionally trigger onSuccess callback to refresh the UI or fetch the updated list
+      if (onSuccess) onSuccess();
+      window.location.reload(); // Refresh the page after adding or updating
     } catch (err) {
       console.error("Error adding/updating book:", err);
       setError("An error occurred while saving the book. Please try again.");

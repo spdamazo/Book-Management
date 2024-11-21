@@ -48,12 +48,12 @@ const App = () => {
               <button onClick={handleLogout}>Logout</button>
             </div>
           ) : (
-            <BookList /> // Guest view - Can only view the books
+            <BookList token={token} /> // Guest view - Can only view the books
           )}
         </div>
       )}
 
-      {!isLoggedIn && <BookList />} {/* Guest view always visible, no login required */}
+      {!isLoggedIn && <BookList token={token} />} {/* Guest view always visible, no login required */}
     </div>
   );
 };
