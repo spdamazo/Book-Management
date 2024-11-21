@@ -398,5 +398,29 @@
     "description": "A spiritual novel that follows the journey of a young man in ancient India seeking enlightenment.",
     "publicationDate": "1922-09-06",
     "coverImage": "https://books.google.ca/books/content?id=putbK6p2o4sC&pg=PP1&img=1&zoom=3&hl=en&bul=1&sig=ACfU3U2HtTGnl5eABPpeH0BUEC5nh3lRWQ&w=1280"
+  },
+  {
+    "id": 51,
+    "title": "Book1",
+    "author": "Person1",
+    "description": "Description1",
+    "publicationDate": "2024-11-20",
+    "coverImage": "https://www.designforwriters.com/wp-content/uploads/2017/10/design-for-writers-book-cover-tf-2-a-million-to-one.jpg"
+  },
+  {
+    "id": 52,
+    "title": "Book2",
+    "author": "Person2",
+    "description": "Description2",
+    "publicationDate": "2024-11-20",
+    "coverImage": "https://www.designforwriters.com/wp-content/uploads/2017/10/design-for-writers-book-cover-tf-2-a-million-to-one.jpg"
+  },
+  {
+    "id": 53,
+    "title": "Book3",
+    "author": "Person3",
+    "description": "Description3",
+    "publicationDate": "2024-11-20",
+    "coverImage": "https://www.designforwriters.com/wp-content/uploads/2017/10/design-for-writers-book-cover-tf-2-a-million-to-one.jpg"
   }
 ]

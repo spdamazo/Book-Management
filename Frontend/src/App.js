@@ -1,27 +1,37 @@
-import React, { useState } from 'react';
-import { login } from './api'; // Assuming your API file is named `api.js`
-import BookList from './Component/BookList'; // Component to display the list of books
-import AdminView from './Component/AdminView'; // Admin-specific components for adding/editing/deleting books
+import React, { useState, useEffect } from "react";
+import Login from "./Component/Login"; // Import the new Login component
+import BookList from "./Component/BookList"; // Component to display the list of books
+import AdminView from "./Component/AdminView"; // Admin-specific components for adding/editing/deleting books
 
 const App = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [token, setToken] = useState('');
+  const [token, setToken] = useState("");
 
-  // Function to handle admin login
-  const handleLogin = async () => {
-    try {
-      const response = await login(username, password);
-      setMessage(response.message || 'Login successful');
-      setToken(response.token);
+  // Check local storage for existing token on component mount
+  useEffect(() => {
+    const savedToken = localStorage.getItem("adminToken");
+    if (savedToken) {
+      setToken(savedToken);
       setIsLoggedIn(true);
-      setIsAdmin(true); // If logged in as admin
-    } catch (error) {
-      setMessage(error.message || 'Login failed');
+      setIsAdmin(true); // Assume token in local storage means admin access
     }
+  }, []);
+
+  // Callback to handle successful login
+  const handleLoginSuccess = (token) => {
+    setToken(token);
+    setIsLoggedIn(true);
+    setIsAdmin(true);
+    localStorage.setItem("adminToken", token); // Save token to local storage
+  };
+
+  // Function to handle logout
+  const handleLogout = () => {
+    setToken("");
+    setIsLoggedIn(false);
+    setIsAdmin(false);
+    localStorage.removeItem("adminToken"); // Clear token from local storage
   };
 
   return (
@@ -29,29 +39,14 @@ const App = () => {
       <h1>Book Management System</h1>
 
       {!isLoggedIn ? (
-        // Admin Login form
-        <div>
-          <h2>Admin Login</h2>
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button onClick={handleLogin}>Login as Admin</button>
-          {message && <p>{message}</p>}
-        </div>
+        <Login onLoginSuccess={handleLoginSuccess} /> // Use Login component
       ) : (
-        // If logged in, show admin or guest view
         <div>
           {isAdmin ? (
-            <AdminView token={token} /> // Admin view - Can add/edit/delete books
+            <div>
+              <AdminView token={token} /> {/* Admin view - Can add/edit/delete books */}
+              <button onClick={handleLogout}>Logout</button>
+            </div>
           ) : (
             <BookList /> // Guest view - Can only view the books
           )}
