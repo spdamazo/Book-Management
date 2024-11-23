@@ -4,6 +4,7 @@ import Login from "./Component/Login";
 import BookList from "./Component/BookList";
 import AdminView from "./Component/AdminView";
 import BookForm from "./Component/BookForm";
+import BookDetail from "./Component/BookDetail";
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -102,6 +103,7 @@ const App = () => {
               />
             }
           />
+          <Route path="/book/:bookId" element={<BookDetail />} /> {/* Detailed view route */}
         </Routes>
       </div>
     </Router>

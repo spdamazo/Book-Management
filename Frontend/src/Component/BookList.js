@@ -80,6 +80,10 @@ const BookList = ({ token, searchQuery, setSearchQuery }) => {
     navigate(`/edit/${bookId}`);
   };
 
+  const handleView = (bookId) => {
+    navigate(`/book/${bookId}`); // Navigate to detailed view
+  };
+
   return (
     <div>
       <SearchBar onSearch={setSearchQuery} />
@@ -98,6 +102,7 @@ const BookList = ({ token, searchQuery, setSearchQuery }) => {
               )}
               <p>{book.description}</p>
               <p>Publication Date: {book.publicationDate}</p>
+              <button onClick={() => handleView(book.id)}>View</button>
               {token && (
                 <div>
                   <button onClick={() => handleDelete(book.id)}>Delete</button>

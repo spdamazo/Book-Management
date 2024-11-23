@@ -446,5 +446,13 @@
     "description": "Desc",
     "publicationDate": "2024-11-13",
     "coverImage": "https://www.designforwriters.com/wp-content/uploads/2017/10/design-for-writers-book-cover-pp-mrh-4-thy-fathers-house.jpg"
+  },
+  {
+    "id": 59,
+    "title": "Book10",
+    "author": "Person10",
+    "description": "Description",
+    "publicationDate": "2024-10-31",
+    "coverImage": "https://www.designforwriters.com/wp-content/uploads/2017/10/design-for-writers-book-cover-tf-2-a-million-to-one.jpg"
   }
 ]
