@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-import { login } from "../api"; // Adjust the import path based on your folder structure
+import { useNavigate } from "react-router-dom"; 
+import { login } from "../api"; 
 
 const Login = ({ onLoginSuccess }) => {
   const [username, setUsername] = useState("");

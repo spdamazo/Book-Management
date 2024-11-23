@@ -1,23 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom"; // Import useParams and useNavigate
-import { addBook, updateBook, getBookById } from "../api";
+import { useParams, useNavigate } from "react-router-dom"; // Import useParams and useNavigate hooks to handle routing and URL params
+import { addBook, updateBook, getBookById } from "../api"; // Import API functions for adding, updating, and fetching book data
 
 const BookForm = ({ token, onSuccess }) => {
-  const { bookId } = useParams(); // Get bookId from the URL parameters
-  const navigate = useNavigate(); // Use the navigate hook
+  const { bookId } = useParams(); // Get the bookId from the URL parameters (if editing an existing book)
+  const navigate = useNavigate(); // Hook to navigate between routes
+  // State variables to hold the form input values for the book
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [description, setDescription] = useState("");
   const [publicationDate, setPublicationDate] = useState("");
   const [coverImage, setCoverImage] = useState("");
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(null); // State to hold any error messages
 
-  // Fetch book data if editing an existing book
+  // Fetch book data if we are editing an existing book (based on bookId)
   useEffect(() => {
     if (bookId) {
       const fetchBookData = async () => {
         try {
-          const data = await getBookById(bookId, token); // Fetch book by ID
+          const data = await getBookById(bookId, token); // Fetch book data from the API using bookId and token
+          // Set form fields with the fetched book data
           setTitle(data.title);
           setAuthor(data.author);
           setDescription(data.description);
@@ -25,45 +27,47 @@ const BookForm = ({ token, onSuccess }) => {
           setCoverImage(data.coverImage);
         } catch (err) {
           console.error("Error fetching book data:", err);
-          setError("Failed to load book data.");
+          setError("Failed to load book data."); // Set error message if data fetching fails
         }
       };
-      fetchBookData();
+      fetchBookData(); // Call the fetchBookData function
     }
-  }, [bookId, token]); // Fetch data when bookId changes
+  }, [bookId, token]); // Fetch data when bookId or token changes
 
+  // Handle form submission to either add or update a book
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission
 
     if (!token) {
-      setError("You must be logged in to add or update a book.");
+      setError("You must be logged in to add or update a book."); // Show error if no token (not logged in)
       return;
     }
 
+    // Create an object with the book data to be sent to the API
     const bookData = { title, author, description, publicationDate, coverImage };
 
     try {
       if (bookId) {
-        // Update existing book if bookId is provided
+        // If bookId is provided, update the existing book
         await updateBook(bookId, bookData, token);
-        alert("Book updated successfully!");
+        alert("Book updated successfully!"); // Show success message for updating
       } else {
-        // Add a new book if no bookId is provided
+        // If no bookId, add a new book
         await addBook(bookData, token);
-        alert("Book added successfully!");
+        alert("Book added successfully!"); // Show success message for adding
       }
       
-      // Navigate to the book list page after success
+      // Call the onSuccess callback after successful addition or update
       if (onSuccess) onSuccess();
-      navigate("/books"); // Redirect to BookList after adding/updating book
+      navigate("/books"); // Navigate to the book list page after success
     } catch (err) {
       console.error("Error adding/updating book:", err);
-      setError("An error occurred while saving the book. Please try again.");
+      setError("An error occurred while saving the book. Please try again."); // Show error message if API call fails
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}> {/* Form submission triggers handleSubmit */}
       <div>
         <label htmlFor="title">Title:</label>
         <input
@@ -71,7 +75,7 @@ const BookForm = ({ token, onSuccess }) => {
           type="text"
           placeholder="Enter book title"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => setTitle(e.target.value)} // Update title state on input change
         />
       </div>
       <div>
@@ -81,7 +85,7 @@ const BookForm = ({ token, onSuccess }) => {
           type="text"
           placeholder="Enter author's name"
           value={author}
-          onChange={(e) => setAuthor(e.target.value)}
+          onChange={(e) => setAuthor(e.target.value)} // Update author state on input change
         />
       </div>
       <div>
@@ -90,7 +94,7 @@ const BookForm = ({ token, onSuccess }) => {
           id="description"
           placeholder="Enter book description"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={(e) => setDescription(e.target.value)} // Update description state on input change
         />
       </div>
       <div>
@@ -99,7 +103,7 @@ const BookForm = ({ token, onSuccess }) => {
           id="publicationDate"
           type="date"
           value={publicationDate}
-          onChange={(e) => setPublicationDate(e.target.value)}
+          onChange={(e) => setPublicationDate(e.target.value)} // Update publicationDate state on input change
         />
       </div>
       <div>
@@ -109,11 +113,11 @@ const BookForm = ({ token, onSuccess }) => {
           type="url"
           placeholder="Enter cover image URL"
           value={coverImage}
-          onChange={(e) => setCoverImage(e.target.value)}
+          onChange={(e) => setCoverImage(e.target.value)} // Update coverImage state on input change
         />
       </div>
-      <button type="submit">{bookId ? "Update Book" : "Add Book"}</button>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      <button type="submit">{bookId ? "Update Book" : "Add Book"}</button> {/* Button text depends on whether bookId exists */}
+      {error && <p style={{ color: "red" }}>{error}</p>} {/* Display error message if there is an error */}
     </form>
   );
 };
