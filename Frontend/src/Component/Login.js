@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { login } from "../api"; // Adjust the import path based on your folder structure
 
 const Login = ({ onLoginSuccess }) => {
@@ -6,6 +7,7 @@ const Login = ({ onLoginSuccess }) => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false); // To handle loading state
+  const navigate = useNavigate(); // Initialize useNavigate for redirection
 
   const handleLogin = async () => {
     setLoading(true); // Start loading
@@ -13,12 +15,12 @@ const Login = ({ onLoginSuccess }) => {
 
     try {
       const response = await login(username, password);
-      
-      // Assuming the response contains the token in the response.data
+
+      // Assuming the response contains the token
       if (response.token) {
         setMessage("Login successful");
-        // Notify parent component of successful login
-        onLoginSuccess(response.token);
+        onLoginSuccess(response.token); // Notify parent component of successful login
+        navigate("/books"); // Redirect to BookList page
       } else {
         setMessage("Login failed: No token received.");
       }
