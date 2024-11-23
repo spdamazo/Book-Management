@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { getBooks, deleteBook } from "../api"; // Assuming these functions are in your API file
-import { useNavigate } from "react-router-dom"; // Import useNavigate for programmatic navigation
+import SearchBar from "./SearchBar"; // Import the search bar
+import { getBooks, deleteBook } from "../api";
+import { useNavigate } from "react-router-dom";
 
-const BookList = ({ token }) => {
+const BookList = ({ token, searchQuery, setSearchQuery }) => {
   const [books, setBooks] = useState([]);
+  const [filteredBooks, setFilteredBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
-  // Fetch books on component mount
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const data = await getBooks(token); // Pass token here
+        const data = await getBooks(token);
         setBooks(data);
+        setFilteredBooks(data);
       } catch (err) {
         console.error("Error fetching books:", err);
         setError("Failed to load books. Please try again later.");
@@ -22,9 +24,40 @@ const BookList = ({ token }) => {
       }
     };
     fetchBooks();
-  }, [token]); // Trigger re-fetch if token changes
+  }, [token]);
 
-  // Handle book deletion
+  useEffect(() => {
+    if (searchQuery) {
+      const { title, author, keyword, publicationDate } = searchQuery;
+
+      setFilteredBooks(
+        books.filter((book) => {
+          const matchesTitle = title
+            ? book.title.toLowerCase().includes(title.toLowerCase())
+            : true;
+          const matchesAuthor = author
+            ? book.author.toLowerCase().includes(author.toLowerCase())
+            : true;
+          const matchesKeyword = keyword
+            ? book.description.toLowerCase().includes(keyword.toLowerCase())
+            : true;
+          const matchesPublicationDate = publicationDate
+            ? book.publicationDate === publicationDate
+            : true;
+
+          return (
+            matchesTitle &&
+            matchesAuthor &&
+            matchesKeyword &&
+            matchesPublicationDate
+          );
+        })
+      );
+    } else {
+      setFilteredBooks(books);
+    }
+  }, [searchQuery, books]);
+
   const handleDelete = async (id) => {
     if (!token) {
       alert("You need to be logged in as admin to delete a book.");
@@ -35,7 +68,7 @@ const BookList = ({ token }) => {
     if (!confirmDelete) return;
 
     try {
-      await deleteBook(id, token); // Pass token to deleteBook API
+      await deleteBook(id, token);
       setBooks((prevBooks) => prevBooks.filter((book) => book.id !== id));
     } catch (err) {
       console.error("Error deleting book:", err);
@@ -44,23 +77,19 @@ const BookList = ({ token }) => {
   };
 
   const handleEdit = (bookId) => {
-    // Navigate to the BookForm page with the bookId for editing
     navigate(`/edit/${bookId}`);
   };
 
-  if (loading) {
-    return <p>Loading books...</p>;
-  }
-
-  if (error) {
-    return <p>{error}</p>;
-  }
-
   return (
     <div>
-      {books.length > 0 ? (
+      <SearchBar onSearch={setSearchQuery} />
+      {loading ? (
+        <p>Loading books...</p>
+      ) : error ? (
+        <p>{error}</p>
+      ) : filteredBooks.length > 0 ? (
         <ul>
-          {books.map((book) => (
+          {filteredBooks.map((book) => (
             <li key={book.id}>
               <h3>{book.title}</h3>
               <p>{book.author}</p>
@@ -68,17 +97,18 @@ const BookList = ({ token }) => {
                 <img src={book.coverImage} alt={book.title} width="100" />
               )}
               <p>{book.description}</p>
+              <p>Publication Date: {book.publicationDate}</p>
               {token && (
                 <div>
                   <button onClick={() => handleDelete(book.id)}>Delete</button>
-                  <button onClick={() => handleEdit(book.id)}>Edit</button> {/* Programmatic navigation */}
+                  <button onClick={() => handleEdit(book.id)}>Edit</button>
                 </div>
               )}
             </li>
           ))}
         </ul>
       ) : (
-        <p>No books available</p>
+        <p>No books match your search criteria.</p>
       )}
     </div>
   );
