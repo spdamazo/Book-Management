@@ -1,34 +1,33 @@
 import React, { useEffect, useState } from "react";
-import SearchBar from "./SearchBar"; // Import the SearchBar component
-import { getBooks, deleteBook } from "../api"; // Import API functions to fetch books and delete a book
-import { useNavigate } from "react-router-dom"; // Import the useNavigate hook for routing
+import SearchBar from "./SearchBar";
+import { getBooks, deleteBook } from "../api";
+import { useNavigate } from "react-router-dom";
+import "../App.css";
+
 
 const BookList = ({ token, searchQuery, setSearchQuery }) => {
-  // State to hold the list of all books, filtered books, loading state, and error state
   const [books, setBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // Hook to navigate to different routes
+  const navigate = useNavigate();
 
-  // Fetch books from the API when the component mounts or the token changes
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const data = await getBooks(token); // Fetch books using the provided token for authorization
-        setBooks(data); // Store the fetched books in the state
-        setFilteredBooks(data); // Initially, set filteredBooks to all books
+        const data = await getBooks(token);
+        setBooks(data);
+        setFilteredBooks(data);
       } catch (err) {
         console.error("Error fetching books:", err);
-        setError("Failed to load books. Please try again later."); // Set error message if fetching fails
+        setError("Failed to load books. Please try again later.");
       } finally {
-        setLoading(false); // Set loading to false after data fetching completes
+        setLoading(false);
       }
     };
-    fetchBooks(); // Call the fetchBooks function
-  }, [token]); // Dependency array ensures books are fetched when the token changes
+    fetchBooks();
+  }, [token]);
 
-  // Filter the books based on searchQuery whenever searchQuery or books change
   useEffect(() => {
     if (searchQuery) {
       const { title, author, keyword, publicationDate } = searchQuery;
@@ -57,11 +56,10 @@ const BookList = ({ token, searchQuery, setSearchQuery }) => {
         })
       );
     } else {
-      setFilteredBooks(books); // If no search query, show all books
+      setFilteredBooks(books);
     }
   }, [searchQuery, books]);
 
-  // Handle deleting a book
   const handleDelete = async (id) => {
     if (!token) {
       alert("You need to be logged in as admin to delete a book.");
@@ -72,41 +70,39 @@ const BookList = ({ token, searchQuery, setSearchQuery }) => {
     if (!confirmDelete) return;
 
     try {
-      await deleteBook(id, token); // Call the deleteBook function
-      setBooks((prevBooks) => prevBooks.filter((book) => book.id !== id)); // Update the state
+      await deleteBook(id, token);
+      setBooks((prevBooks) => prevBooks.filter((book) => book.id !== id));
     } catch (err) {
       console.error("Error deleting book:", err);
       alert("Failed to delete the book. Please try again.");
     }
   };
 
-  // Handle navigating to the detailed view of a book
   const handleView = (bookId) => {
-    navigate(`/book/${bookId}`); // Navigate to the book's detail page
+    navigate(`/book/${bookId}`);
   };
 
   return (
     <div>
-      <SearchBar onSearch={setSearchQuery} /> {/* Render the SearchBar */}
+      <SearchBar onSearch={setSearchQuery} />
       {loading ? (
         <p>Loading books...</p>
       ) : error ? (
         <p>{error}</p>
       ) : filteredBooks.length > 0 ? (
-        <ul>
+        <div className="book-list-container">
           {filteredBooks.map((book) => (
-            <li key={book.id}>
-              {/* Add onClick to the image and title */}
+            <div className="book-card" key={book.id}>
               <img
                 src={book.coverImage}
                 alt={book.title}
                 width="100"
                 style={{ cursor: "pointer" }}
-                onClick={() => handleView(book.id)} // Navigate to detail page when clicked
+                onClick={() => handleView(book.id)}
               />
               <h3
                 style={{ cursor: "pointer", textDecoration: "underline" }}
-                onClick={() => handleView(book.id)} // Navigate to detail page when clicked
+                onClick={() => handleView(book.id)}
               >
                 {book.title}
               </h3>
@@ -117,9 +113,9 @@ const BookList = ({ token, searchQuery, setSearchQuery }) => {
                   <button onClick={() => handleView(book.id)}>Edit</button>
                 </div>
               )}
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       ) : (
         <p>No books match your search criteria.</p>
       )}

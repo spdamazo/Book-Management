@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import "../App"; 
 
-// SearchBar component allows users to search for books based on multiple fields (title, author, keyword, publication date)
+// SearchBar component for filtering books based on various fields
 const SearchBar = ({ onSearch }) => {
-  // State to hold the values for each search field (title, author, keyword, and publicationDate)
+  // State to manage search field inputs (title, author, keyword, and publication date)
   const [searchFields, setSearchFields] = useState({
     title: "",
     author: "",
@@ -10,63 +11,64 @@ const SearchBar = ({ onSearch }) => {
     publicationDate: "",
   });
 
-  // Handle input changes in any of the search fields and update the corresponding state
+  // Handles changes in any input field and updates the corresponding state
   const handleChange = (e) => {
-    const { name, value } = e.target; // Destructure the name and value from the event target (input field)
-    
-    // Update the corresponding search field state (title, author, keyword, publicationDate)
-    setSearchFields((prev) => ({ ...prev, [name]: value }));
+    const { name, value } = e.target; // Get input name and value from the event
+    setSearchFields((prev) => ({
+      ...prev,
+      [name]: value, // Update the specific field while preserving others
+    }));
   };
 
-  // Handle the search action by passing the current search fields to the parent component
+  // Trigger the search action by sending the current search fields to the parent component
   const handleSearch = () => {
-    onSearch(searchFields); // Pass the current search field values to the parent component (via the onSearch prop)
+    onSearch(searchFields); // Call the parent function with the current search values
   };
 
   return (
-    <div style={{ margin: "20px 0" }}>
-      {/* Input field for searching by title */}
+    <div className="search-bar">
+      {/* Input for searching by title */}
       <input
         type="text"
-        name="title" // Set the name attribute to "title" for the title search field
-        placeholder="Search by Title" // Placeholder text for the input field
-        value={searchFields.title} // Bind the value of the input field to the state
-        onChange={handleChange} // Update the state when the user types in the input field
-        style={{ margin: "5px", padding: "5px", width: "200px" }} // Inline styling for the input field
+        name="title"
+        placeholder="Search by Title"
+        value={searchFields.title}
+        onChange={handleChange}
+        className="search-input"
       />
-      
-      {/* Input field for searching by author */}
+
+      {/* Input for searching by author */}
       <input
         type="text"
-        name="author" // Set the name attribute to "author" for the author search field
+        name="author"
         placeholder="Search by Author"
         value={searchFields.author}
         onChange={handleChange}
-        style={{ margin: "5px", padding: "5px", width: "200px" }}
+        className="search-input"
       />
-      
-      {/* Input field for searching by keyword */}
+
+      {/* Input for searching by keyword */}
       <input
         type="text"
-        name="keyword" // Set the name attribute to "keyword" for the keyword search field
+        name="keyword"
         placeholder="Search by Keyword"
         value={searchFields.keyword}
         onChange={handleChange}
-        style={{ margin: "5px", padding: "5px", width: "200px" }}
+        className="search-input"
       />
-      
-      {/* Input field for searching by publication date */}
+
+      {/* Input for searching by publication date */}
       <input
         type="date"
-        name="publicationDate" // Set the name attribute to "publicationDate" for the publication date search field
-        value={searchFields.publicationDate} // Bind the value of the input field to the state
-        onChange={handleChange} // Update the state when the user selects a publication date
-        style={{ margin: "5px", padding: "5px" }}
+        name="publicationDate"
+        value={searchFields.publicationDate}
+        onChange={handleChange}
+        className="search-input"
       />
-      
-      {/* Button to trigger the search action */}
-      <button onClick={handleSearch} style={{ margin: "5px", padding: "5px" }}>
-        Search {/* Button text */}
+
+      {/* Search button to initiate the search action */}
+      <button onClick={handleSearch} className="search-button">
+        Search
       </button>
     </div>
   );

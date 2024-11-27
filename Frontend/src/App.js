@@ -1,45 +1,45 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import Login from "./Component/Login";
-import BookList from "./Component/BookList";
-import AdminView from "./Component/AdminView";
-import BookForm from "./Component/BookForm";
-import BookDetail from "./Component/BookDetail";
+import Login from "./Component/Login.js";
+import BookList from "./Component/BookList.js";
+import AdminView from "./Component/AdminView.js";
+import BookForm from "./Component/BookForm.js";
+import BookDetail from "./Component/BookDetail.js";
 
 const App = () => {
-  // State variables to track login status, admin status, authentication token, and search query
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Tracks if the user is logged in
-  const [isAdmin, setIsAdmin] = useState(false); // Tracks if the logged-in user is an admin
-  const [token, setToken] = useState(""); // Holds the authentication token for the logged-in user
-  const [searchQuery, setSearchQuery] = useState(null); // Holds the search query for book search
+  // State to manage the login status
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Whether the user is logged in
+  const [isAdmin, setIsAdmin] = useState(false); // Whether the user is an admin
+  const [token, setToken] = useState(""); // Stores the authentication token
+  const [searchQuery, setSearchQuery] = useState(null); // Stores the search query for books
 
-  // Effect hook to check for an existing token in localStorage on component mount
+  // Check if a token exists in localStorage when the component mounts
   useEffect(() => {
-    const savedToken = localStorage.getItem("adminToken"); // Retrieve token from localStorage
+    const savedToken = localStorage.getItem("adminToken"); // Retrieve the token from localStorage
     if (savedToken) {
-      setToken(savedToken); // Set the token if it exists
-      setIsLoggedIn(true); // Mark the user as logged in
-      setIsAdmin(true); // Set the user as an admin if token exists
+      setToken(savedToken); // Set the retrieved token to state
+      setIsLoggedIn(true); // Set login status to true
+      setIsAdmin(true); // Set admin status to true
     }
-  }, []); // Empty dependency array ensures this runs once when the component mounts
+  }, []); // Runs only once when the component mounts
 
-  // Handler for successful login
+  // Handles login success by updating token and login status
   const handleLoginSuccess = (token) => {
-    setToken(token); // Set the token
-    setIsLoggedIn(true); // Mark the user as logged in
-    setIsAdmin(true); // Mark the user as an admin
-    localStorage.setItem("adminToken", token); // Store the token in localStorage for persistence
+    setToken(token); // Store the token in state
+    setIsLoggedIn(true); // Set login status to true
+    setIsAdmin(true); // Set admin status to true
+    localStorage.setItem("adminToken", token); // Save the token in localStorage for persistence
   };
 
-  // Handler for logout
+  // Handles user logout
   const handleLogout = () => {
-    setToken(""); // Clear the token
-    setIsLoggedIn(false); // Mark the user as logged out
-    setIsAdmin(false); // Mark the user as not an admin
+    setToken(""); // Clear the token in state
+    setIsLoggedIn(false); // Set login status to false
+    setIsAdmin(false); // Set admin status to false
     localStorage.removeItem("adminToken"); // Remove the token from localStorage
   };
 
-  // Handler to reset the search query when navigating to the Book List
+  // Resets the search query when navigating back to the book list
   const resetSearch = () => {
     setSearchQuery(null); // Clear the search query
   };
@@ -47,19 +47,22 @@ const App = () => {
   return (
     <Router>
       <div>
+        {/* Application title */}
         <h1>BVC Library</h1>
 
-        {/* Navigation links for the app */}
+        {/* Navigation bar */}
         <nav>
+          {/* Link to the Book List page */}
           <Link to="/books" onClick={resetSearch} style={{ margin: "0 10px" }}>
             Book List
           </Link>
+          {/* Link to the Add Book page, visible only to admins */}
           {isAdmin && (
             <Link to="/add-book" style={{ margin: "0 10px" }}>
               Add Book
             </Link>
           )}
-          {/* Conditional rendering of login/logout buttons */}
+          {/* Show login or logout options based on the login status */}
           {isLoggedIn ? (
             <button onClick={handleLogout} style={{ margin: "0 10px" }}>
               Logout
@@ -71,24 +74,27 @@ const App = () => {
           )}
         </nav>
 
-        {/* Routes configuration */}
+        {/* Routes for different parts of the application */}
         <Routes>
-          {/* Login route, passing the handleLoginSuccess function as a prop */}
-          <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
+          {/* Login page route */}
+          <Route
+            path="/login"
+            element={<Login onLoginSuccess={handleLoginSuccess} />}
+          />
 
-          {/* Book List route, passes token and searchQuery as props */}
+          {/* Book List page route */}
           <Route
             path="/books"
             element={
               <BookList
                 token={token}
-                searchQuery={searchQuery} // Pass the search query to the BookList component
-                setSearchQuery={setSearchQuery} // Pass the setter for search query to update it
+                searchQuery={searchQuery} // Passes the current search query
+                setSearchQuery={setSearchQuery} // Function to update the search query
               />
             }
           />
 
-          {/* Admin route, only accessible if the user is an admin */}
+          {/* Admin view route (accessible only to admins) */}
           <Route
             path="/admin"
             element={
@@ -97,34 +103,40 @@ const App = () => {
                   <AdminView token={token} />
                 </div>
               ) : (
-                <div>You do not have admin access</div>
+                <div>You do not have admin access</div> // Message for non-admin users
               )
             }
           />
 
-          {/* Add Book route, only accessible to admins */}
+          {/* Add Book page route (accessible only to admins) */}
           <Route
             path="/add-book"
             element={<BookForm token={token} onSuccess={() => {}} />}
           />
 
-          {/* Edit Book route, accessed by passing a bookId as a parameter */}
-          <Route path="/edit/:bookId" element={<BookForm token={token} />} />
+          {/* Edit Book page route (accessible only to admins) */}
+          <Route
+            path="/edit/:bookId"
+            element={<BookForm token={token} />}
+          />
 
-          {/* Default route, renders BookList */}
+          {/* Default route, renders the Book List */}
           <Route
             path="/"
             element={
               <BookList
                 token={token}
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery} // Pass search query and setter
+                searchQuery={searchQuery} // Passes the current search query
+                setSearchQuery={setSearchQuery} // Function to update the search query
               />
             }
           />
 
-          {/* Detailed Book view route, rendered when a user clicks on a book */}
-          <Route path="/book/:bookId" element={<BookDetail />} /> {/* Detailed view route */}
+          {/* Book Detail page route */}
+          <Route
+            path="/book/:bookId"
+            element={<BookDetail />} // Displays detailed information about a book
+          />
         </Routes>
       </div>
     </Router>

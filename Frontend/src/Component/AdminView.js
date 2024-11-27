@@ -1,20 +1,40 @@
-import React from 'react';
-import BookForm from './BookForm'; // Import the form for adding or editing books
-import BookList from './BookList'; // Import the list of books that admins can manage
+import React from "react";
+import { useNavigate } from "react-router-dom"; // Import navigation for redirection
+import BookForm from "./BookForm.js"; // Import the form for adding or editing books
+import BookList from "./BookList.js"; // Import the list of books that admins can manage
+import "../App.css"; // Import general CSS styles
 
 const AdminView = ({ token }) => {
+  const navigate = useNavigate(); // Initialize navigation
+
+  // Redirect to login if token is not provided
+  if (!token) {
+    return (
+      <div className="access-denied">
+        <h2>Access Denied</h2>
+        <p>You need to be logged in as an admin to access this page.</p>
+        <button onClick={() => navigate("/login")} className="redirect-button">
+          Go to Login
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <div>
-      <h2>Admin Dashboard</h2> {/* Title of the admin dashboard */}
-      <h3>Add or Edit Books</h3> {/* Heading for the add/edit section */}
-      
-      {/* Render the BookForm component that allows the admin to add or edit a book */}
-      <BookForm token={token} /> {/* Pass token for authentication, needed for adding or editing books */}
-      
-      <h3>Books List</h3> {/* Heading for the books list */}
-      
-      {/* Render the BookList component that allows the admin to manage (edit/delete) books */}
-      <BookList token={token} /> {/* Pass token for authentication, needed for editing/deleting books */}
+    <div className="admin-dashboard">
+      <h2 className="dashboard-title">Admin Dashboard</h2> {/* Title of the admin dashboard */}
+
+      {/* Section for adding or editing books */}
+      <div className="admin-section">
+        <h3 className="section-title">Add or Edit Books</h3>
+        <BookForm token={token} />
+      </div>
+
+      {/* Section for managing book list */}
+      <div className="admin-section">
+        <h3 className="section-title">Books List</h3>
+        <BookList token={token} />
+      </div>
     </div>
   );
 };
