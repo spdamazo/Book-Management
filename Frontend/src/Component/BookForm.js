@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom"; // Import useParams and useNavigate hooks to handle routing and URL params
 import { addBook, updateBook, getBookById } from "../api"; // Import API functions for adding, updating, and fetching book data
-import "./BookForm.css"; // Import CSS file for styling
+import "../App.css";
 
 const BookForm = ({ token, onSuccess }) => {
   const { bookId } = useParams(); // Get the bookId from the URL parameters (if editing an existing book)
