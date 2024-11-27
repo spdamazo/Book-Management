@@ -4,7 +4,6 @@ import { getBooks, deleteBook } from "../api";
 import { useNavigate } from "react-router-dom";
 import "../App.css";
 
-
 const BookList = ({ token, searchQuery, setSearchQuery }) => {
   const [books, setBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
@@ -66,7 +65,9 @@ const BookList = ({ token, searchQuery, setSearchQuery }) => {
       return;
     }
 
-    const confirmDelete = window.confirm("Are you sure you want to delete this book?");
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this book?"
+    );
     if (!confirmDelete) return;
 
     try {
@@ -78,8 +79,9 @@ const BookList = ({ token, searchQuery, setSearchQuery }) => {
     }
   };
 
-  const handleView = (bookId) => {
-    navigate(`/book/${bookId}`);
+  // Navigate to BookForm for editing
+  const handleEdit = (bookId) => {
+    navigate(`/edit/${bookId}`);
   };
 
   return (
@@ -98,11 +100,11 @@ const BookList = ({ token, searchQuery, setSearchQuery }) => {
                 alt={book.title}
                 width="100"
                 style={{ cursor: "pointer" }}
-                onClick={() => handleView(book.id)}
+                onClick={() => navigate(`/book/${book.id}`)} // View book details
               />
               <h3
                 style={{ cursor: "pointer", textDecoration: "underline" }}
-                onClick={() => handleView(book.id)}
+                onClick={() => navigate(`/book/${book.id}`)} // View book details
               >
                 {book.title}
               </h3>
@@ -110,7 +112,7 @@ const BookList = ({ token, searchQuery, setSearchQuery }) => {
               {token && (
                 <div>
                   <button onClick={() => handleDelete(book.id)}>Delete</button>
-                  <button onClick={() => handleView(book.id)}>Edit</button>
+                  <button onClick={() => handleEdit(book.id)}>Edit</button> {/* Edit button */}
                 </div>
               )}
             </div>
