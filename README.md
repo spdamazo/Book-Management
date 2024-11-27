@@ -19,3 +19,9 @@ References:
 Axios: https://www.geeksforgeeks.org/axios-in-react-a-guide-for-beginners/
 Dotenv: https://codesplash.medium.com/get-environment-variable-dotenv-in-both-frontend-and-backend-mern-stack-with-vite-19c061e6dc19
 React: https://www.w3schools.com/react/react_router.asp
+I used ChatGPT to assist me with writing the function below. I gave it the following prompt: 
+Why is frontend not connecting to backend
+How can you connect frontend react to backend
+Help me improve my code 
+Check my code syntax 
+Put in comments to explain code
