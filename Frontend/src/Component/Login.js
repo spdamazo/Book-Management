@@ -1,6 +1,6 @@
-import React, { useState } from "react"; // Import React and useState hook
-import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation after successful login
-import { login } from "../api"; // Import the login function from the API
+import React, { useState } from "react"; 
+import { useNavigate } from "react-router-dom"; 
+import { login } from "../api"; 
 
 const Login = ({ onLoginSuccess }) => {
   // State variables to manage form input, loading state, and messages

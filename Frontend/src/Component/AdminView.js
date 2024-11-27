@@ -1,11 +1,11 @@
 import React from "react";
-import { useNavigate } from "react-router-dom"; // Import navigation for redirection
-import BookForm from "./BookForm.js"; // Import the form for adding or editing books
-import BookList from "./BookList.js"; // Import the list of books that admins can manage
-import "../App.css"; // Import general CSS styles
+import { useNavigate } from "react-router-dom"; 
+import BookForm from "./BookForm.js"; 
+import BookList from "./BookList.js"; 
+import "../App.css"; 
 
 const AdminView = ({ token }) => {
-  const navigate = useNavigate(); // Initialize navigation
+  const navigate = useNavigate(); 
 
   // Redirect to login if token is not provided
   if (!token) {

@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react"; // Import React and necessary hooks
-import SearchBar from "./SearchBar"; // Import SearchBar component for handling search input
-import { getBooks, deleteBook } from "../api"; // Import functions to fetch and delete books from the API
-import { useNavigate } from "react-router-dom"; // Import useNavigate hook for navigation
-import "../App.css"; // Import CSS for styling
+import React, { useEffect, useState } from "react"; 
+import SearchBar from "./SearchBar";
+import { getBooks, deleteBook } from "../api"; 
+import { useNavigate } from "react-router-dom"; 
+import "../App.css"; 
 
 const BookList = ({ token, searchQuery, setSearchQuery }) => {
   // State variables to store books, filtered books, loading status, and any errors
