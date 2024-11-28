@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from "react-router-dom";
 import Login from "./Component/Login.js";
 import BookList from "./Component/BookList.js";
 import AdminView from "./Component/AdminView.js";
 import BookForm from "./Component/BookForm.js";
 import BookDetail from "./Component/BookDetail.js";
+import './App.css'; // Importing the CSS file
 
 const App = () => {
   // State to manage the login status
@@ -31,12 +32,43 @@ const App = () => {
     localStorage.setItem("adminToken", token); // Save the token in localStorage for persistence
   };
 
+  return (
+    <Router>
+      <MainApp
+        isLoggedIn={isLoggedIn}
+        setIsLoggedIn={setIsLoggedIn}
+        isAdmin={isAdmin}
+        setIsAdmin={setIsAdmin}
+        token={token}
+        setToken={setToken}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        handleLoginSuccess={handleLoginSuccess}
+      />
+    </Router>
+  );
+};
+
+const MainApp = ({
+  isLoggedIn,
+  setIsLoggedIn,
+  isAdmin,
+  setIsAdmin,
+  token,
+  setToken,
+  searchQuery,
+  setSearchQuery,
+  handleLoginSuccess,
+}) => {
+  const navigate = useNavigate(); // Hook for navigating to different routes
+
   // Handles user logout
   const handleLogout = () => {
     setToken(""); // Clear the token in state
     setIsLoggedIn(false); // Set login status to false
     setIsAdmin(false); // Set admin status to false
     localStorage.removeItem("adminToken"); // Remove the token from localStorage
+    navigate("/books"); // Navigate to the Book List page after logging out
   };
 
   // Resets the search query when navigating back to the book list
@@ -45,101 +77,99 @@ const App = () => {
   };
 
   return (
-    <Router>
-      <div>
-        {/* Application title */}
-        <h1>BVC Library</h1>
+    <div>
+      {/* Application title */}
+      <h1>BVC Library</h1>
 
-        {/* Navigation bar */}
-        <nav>
-          {/* Link to the Book List page */}
-          <Link to="/books" onClick={resetSearch} style={{ margin: "0 10px" }}>
-            Book List
+      {/* Navigation bar */}
+      <nav>
+        {/* Link to the Book List page */}
+        <Link to="/books" onClick={resetSearch} className="nav-link">
+          Book List
+        </Link>
+        {/* Link to the Add Book page, visible only to admins */}
+        {isAdmin && (
+          <Link to="/add-book" className="nav-link">
+            Add Book
           </Link>
-          {/* Link to the Add Book page, visible only to admins */}
-          {isAdmin && (
-            <Link to="/add-book" style={{ margin: "0 10px" }}>
-              Add Book
-            </Link>
-          )}
-          {/* Show login or logout options based on the login status */}
-          {isLoggedIn ? (
-            <button onClick={handleLogout} style={{ margin: "0 10px" }}>
-              Logout
-            </button>
-          ) : (
-            <Link to="/login" style={{ margin: "0 10px" }}>
-              Admin Login
-            </Link>
-          )}
-        </nav>
+        )}
+        {/* Show login or logout options based on the login status */}
+        {isLoggedIn ? (
+          <button onClick={handleLogout} className="logout-btn">
+            Logout
+          </button>
+        ) : (
+          <Link to="/login" className="nav-link">
+            Admin Login
+          </Link>
+        )}
+      </nav>
 
-        {/* Routes for different parts of the application */}
-        <Routes>
-          {/* Login page route */}
-          <Route
-            path="/login"
-            element={<Login onLoginSuccess={handleLoginSuccess} />}
-          />
+      {/* Routes for different parts of the application */}
+      <Routes>
+        {/* Login page route */}
+        <Route
+          path="/login"
+          element={<Login onLoginSuccess={handleLoginSuccess} />}
+        />
 
-          {/* Book List page route */}
-          <Route
-            path="/books"
-            element={
-              <BookList
-                token={token}
-                searchQuery={searchQuery} // Passes the current search query
-                setSearchQuery={setSearchQuery} // Function to update the search query
-              />
-            }
-          />
+        {/* Book List page route */}
+        <Route
+          path="/books"
+          element={
+            <BookList
+              token={token}
+              searchQuery={searchQuery} // Passes the current search query
+              setSearchQuery={setSearchQuery} // Function to update the search query
+            />
+          }
+        />
 
-          {/* Admin view route (accessible only to admins) */}
-          <Route
-            path="/admin"
-            element={
-              isAdmin ? (
-                <div>
-                  <AdminView token={token} />
-                </div>
-              ) : (
-                <div>You do not have admin access</div> // Message for non-admin users
-              )
-            }
-          />
+        {/* Admin view route (accessible only to admins) */}
+        <Route
+          path="/admin"
+          element={
+            isAdmin ? (
+              <div>
+                <AdminView token={token} />
+              </div>
+            ) : (
+              <div>You do not have admin access</div> // Message for non-admin users
+            )
+          }
+        />
 
-          {/* Add Book page route (accessible only to admins) */}
-          <Route
-            path="/add-book"
-            element={<BookForm token={token} onSuccess={() => {}} />}
-          />
+        {/* Add Book page route (accessible only to admins) */}
+        <Route
+          path="/add-book"
+          element={<BookForm token={token} onSuccess={() => {}} />}
+        />
 
-          {/* Edit Book page route (accessible only to admins) */}
-          <Route
-            path="/edit/:bookId"
-            element={<BookForm token={token} />}
-          />
+        {/* Edit Book page route (accessible only to admins) */}
+        <Route
+          path="/edit/:bookId"
+          element={<BookForm token={token} />}
+        />
 
-          {/* Default route, renders the Book List */}
-          <Route
-            path="/"
-            element={
-              <BookList
-                token={token}
-                searchQuery={searchQuery} // Passes the current search query
-                setSearchQuery={setSearchQuery} // Function to update the search query
-              />
-            }
-          />
+        {/* Default route, renders the Book List */}
+        <Route
+          path="/"
+          element={
+            <BookList
+              token={token}
+              searchQuery={searchQuery} // Passes the current search query
+              setSearchQuery={setSearchQuery} // Function to update the search query
+            />
+          }
+        />
 
-          {/* Book Detail page route */}
-          <Route
-            path="/book/:bookId"
-            element={<BookDetail />} // Displays detailed information about a book
-          />
-        </Routes>
-      </div>
-    </Router>
+        {/* Book Detail page route */}
+        <Route
+          path="/book/:bookId"
+          element={<BookDetail />} // Displays detailed information about a book
+        />
+      </Routes>
+    </div>
   );
 };
 

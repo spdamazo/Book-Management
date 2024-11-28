@@ -400,19 +400,11 @@
     "coverImage": "https://books.google.ca/books/content?id=putbK6p2o4sC&pg=PP1&img=1&zoom=3&hl=en&bul=1&sig=ACfU3U2HtTGnl5eABPpeH0BUEC5nh3lRWQ&w=1280"
   },
   {
-    "id": 51,
-    "title": "Book10",
-    "author": "Person2",
-    "description": "Description2",
-    "publicationDate": "2024-11-13",
-    "coverImage": "https://www.designforwriters.com/wp-content/uploads/2017/10/design-for-writers-book-cover-pp-mrh-4-thy-fathers-house.jpg"
-  },
-  {
-    "id": 52,
-    "title": "Book3",
-    "author": "Person2",
-    "description": "Description",
+    "id": 53,
+    "title": "Book4",
+    "author": "Person4",
+    "description": "Desc",
     "publicationDate": "2024-11-27",
-    "coverImage": "https://www.designforwriters.com/wp-content/uploads/2017/10/design-for-writers-book-cover-pp-mrh-4-thy-fathers-house.jpg"
+    "coverImage": "https://www.designforwriters.com/wp-content/uploads/2017/10/design-for-writers-book-cover-tf-2-a-million-to-one.jpg"
   }
 ]
