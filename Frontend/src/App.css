@@ -347,6 +347,7 @@ nav {
   background-color: #f1f1f1; /* Light gray background */
   padding: 10px;
   border-radius: 5px;
+  text-align: center;
 }
 
 /* Style for each link in the navigation bar */
